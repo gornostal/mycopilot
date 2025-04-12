@@ -56,11 +56,23 @@ function findFileAndReadContents(
 
   const relativePath: string = path.relative(rootDir, filePath);
   const ext: string = extname(filePath).slice(1);
-  const fileContents: string = removeDelimitedSections(
-    fs.readFileSync(filePath, "utf-8")
+  const fileContents: string = removeMarkdownComments(
+    removeDelimitedSections(fs.readFileSync(filePath, "utf-8")),
+    ext
   );
 
   return { relativePath, ext, fileContents };
+}
+
+function removeMarkdownComments(input: string, ext: string): string {
+  if (ext !== "md") {
+    return input;
+  }
+
+  return input
+    .split("\n")
+    .filter((line) => !line.startsWith(";;"))
+    .join("\n");
 }
 
 function removeCommentSymbols(input: string): string {
@@ -125,6 +137,10 @@ export function replaceFileNamesWithContents(
     if (matched) {
       const fileName: string = matched[1];
       const file = findFileAndReadContents(rootDir, fileName);
+
+      if (file.ext === "md") {
+        return file.fileContents;
+      }
 
       return `
 ${file.relativePath}:

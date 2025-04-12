@@ -22,6 +22,7 @@ const main = async (filepath: string) => {
   });
 
   const chatCompletion = await openai.chat.completions.create({
+    // model: "gpt-4.5-preview-2025-02-27",
     model: "gpt-4o",
     messages: [
       {
