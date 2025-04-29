@@ -37,7 +37,11 @@ function findFileAndReadContents(
         if (entry.isDirectory()) {
           const result = searchDirectory(fullPath);
           if (result) return result;
-        } else if (entry.isFile() && entry.name.includes(fileName)) {
+        } else if (
+          entry.isFile() &&
+          entry.name.includes(fileName) &&
+          !entry.name.includes(".pyc")
+        ) {
           return fullPath;
         }
       }
