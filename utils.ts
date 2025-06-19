@@ -39,8 +39,9 @@ function findFileAndReadContents(
           if (result) return result;
         } else if (
           entry.isFile() &&
-          entry.name.includes(fileName) &&
-          !entry.name.includes(".pyc")
+          (fullPath.includes(fileName) || entry.name.includes(fileName)) &&
+          !entry.name.includes(".pyc") &&
+          !fullPath.includes(".mypy_cache")
         ) {
           return fullPath;
         }
